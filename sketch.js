@@ -24,15 +24,19 @@ function setup() {
 
     //creating enemies
     //enemies have their own controller
-    for(let i = 0; i < 20; i++){
-        let enemyController = new GameController(random(-width, width), random(-height, height));
+    for(let i = 0; i < 25; i++){
+        let x = random(-width * 2, width * 2);
+        let y = random(-height * 2, height * 2);
+        let enemyController = new GameController(x, y);
         let enemy = new Snake(enemyController, enemyController.pos.x, enemyController.pos.y);
         enemies.push(enemy);
     }
     
-    //creating the foor
-    for(let i = 0; i < 20; i++){
-        let f = new Food(random(width), random(height));
+    //creating the food
+    for(let i = 0; i < 300; i++){
+        let x = random(-width * 5, width * 5);
+        let y = random(-height * 5, height * 5);
+        let f = new Food(x, y);
         food.push(f);
     }
 }
@@ -56,15 +60,17 @@ function draw() {
 
     //drawing and moving the player
     //if the mouse button is held
-    //we sprint and we reduce the length
-    //and the thickness of the snakes
+    //we sprint and we reduce the length (limited 10)
+    //and the thickness of the snake (limited 20)
     if(mouseIsPressed){
         if(player.body.length > 10){
             player.controller.update(3);
             if(random(1) < 0.05){
-                player.head.w -= 1;
-                for(let seg of player.body){
-                    seg.w -= 1;
+                if(player.head.w > 20){
+                    player.head.w -= 1;
+                    for(let seg of player.body){
+                        seg.w -= 1;
+                    }
                 }
                 player.body.splice(player.body.length - 1, 1);
             }
@@ -79,13 +85,17 @@ function draw() {
 
     //adding some more food
     if(random(1) < 0.03){
-        let f = new Food(random(width), random(height));
+        let x = random(-width * 5, width * 5);
+        let y = random(-height * 5, height * 5);
+        let f = new Food(x, y);
         food.push(f);
     }
 
     //adding some more enemies
     if(random(1) < 0.005){
-        let enemyController = new GameController(random(-width, width), random(-height, height));
+        let x = random(-width * 2, width * 2);
+        let y = random(-height * 2, height * 2);
+        let enemyController = new GameController(x, y);
         let enemy = new Snake(enemyController, enemyController.pos.x, enemyController.pos.y);
         enemies.push(enemy);
     }
@@ -99,7 +109,7 @@ function draw() {
             restartGame();
         }else if(player.checkIfKills(enemies[i])){
             for(let part of enemies[i].body){
-                if(random(1) < 0.5){
+                if(random(1) < 0.6){
                     let f = new Food(part.b.x, part.b.y);
                     food.push(f);
                 }
@@ -132,7 +142,7 @@ function translation(){
 function drawGrid(){
     for(let square of grid){
         noFill();
-        stroke(255);
+        stroke(80);
         strokeWeight(1);
         rect(square.pos.x, square.pos.y, square.w, square.w);
     }
@@ -145,7 +155,9 @@ function restartGame(){
     player = new Snake(playerController);
     enemies = [];
     for(let i = 0; i < 20; i++){
-        let enemyController = new GameController(random(-width, width), random(-height, height));
+        let x = random(-width * 2, width * 2);
+        let y = random(-height * 2, height * 2);
+        let enemyController = new GameController(x, y);
         let enemy = new Snake(enemyController, enemyController.pos.x, enemyController.pos.y);
         enemies.push(enemy);
     }

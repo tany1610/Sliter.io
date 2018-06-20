@@ -16,7 +16,8 @@ function Snake(controller, x, y){
 
 Snake.prototype.buildSnake = function(){
     let prev = this.head;
-    for(let i = 0; i < 10; i++){
+    let len = random(10, 30);
+    for(let i = 0; i < len; i++){
         let current = new Segment(prev.a.x + 5, prev.a.y + 5, prev.w, prev);
         this.body.push(current);
         prev = current;
