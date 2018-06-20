@@ -33,10 +33,17 @@ function draw() {
    player.controller.update();
    player.show();
    player.update();
-   for(let enemy of enemies){
-        if(player.checkIfDead(enemy)){
+
+   for(let i = enemies.length - 1; i >= 0; i--){
+        if(player.checkIfDead(enemies[i])){
             playerController = new GameController();
             player = new Snake(playerController);
+        }else if(player.checkIfKills(enemies[i])){
+            for(let part of enemies[i].body){
+                let f = new Food(part.b.x, part.b.y);
+                food.push(f);
+            }
+            enemies.splice(i, 1);
         }
    }
    

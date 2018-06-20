@@ -30,12 +30,24 @@ Snake.prototype.checkIfDead = function(enemy){
     if(headD < this.head.w / 2){
         return true;
     }
+    for(let part of enemy.body){
+        let d = p5.Vector.dist(this.head.b, part.b);
+        if(d < this.head.w / 2){
+            return true;
+        }
+    }
+    return false;
+}
+
+Snake.prototype.checkIfKills = function(enemy){
+    let headD = p5.Vector.dist(this.head.b, enemy.head.b);
+    if(headD < enemy.head.w / 2){
+        return true;
+    }
     for(let part of this.body){
-        for(let enemyPart of enemy.body){
-            let d = p5.Vector.dist(part.b, enemyPart.b);
-            if(d < this.head.w / 2){
-                return true;
-            }
+        let d = p5.Vector.dist(part.b, enemy.head.b);
+        if(d < enemy.head.w / 2){
+            return true;
         }
     }
     return false;
