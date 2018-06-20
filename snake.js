@@ -1,4 +1,4 @@
-function Snake(x, y){
+function Snake(controller, x, y){
     if(x && y){
         this.head = new Segment(x, y, 20);
     }else{
@@ -6,9 +6,11 @@ function Snake(x, y){
     }
     this.body = [];
     this.buildSnake();
+    this.controller = controller;
+    this.color = createVector(random(255), random(255), random(255));
 }
 
-Snake.prototype.buildSnake = function(w){
+Snake.prototype.buildSnake = function(){
     let prev = this.head;
     for(let i = 0; i < 10; i++){
         let current = new Segment(prev.a.x + 5, prev.a.y + 5, prev);
@@ -56,16 +58,16 @@ Snake.prototype.thicken = function(food){
     }
 }
 
-Snake.prototype.show = function(col){ 
-    this.head.show(col);
+Snake.prototype.show = function(){ 
+    this.head.show(this.color);
     for(let seg of this.body){
-        seg.show(col);
+        seg.show(this.color);
     }
     this.head.drawEyes();
 }
 
-Snake.prototype.update = function(controller){
-    this.head.follow(controller.pos.x, controller.pos.y);
+Snake.prototype.update = function(){
+    this.head.follow(this.controller.pos.x, this.controller.pos.y);
     let prev = this.head;
     for(let seg of this.body){
         seg.follow(prev.a.x, prev.a.y);
