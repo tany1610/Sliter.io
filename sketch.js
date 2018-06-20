@@ -1,22 +1,12 @@
 var player;
 var enemies = [];
 var food = [];
-var grid = [];
 var controller;
 var zoom = 0;
 
 function setup() {
     createCanvas(600, 600);
-    //creating a grid
-    for(let i = 0; i < 600; i += 60){
-        for(let j = 0; j < 600; j += 60){
-            let square = {
-                pos: createVector(i, j),
-                w: 60
-            }
-            grid.push(square);
-        }
-    }
+
     //creating player and player controller
     //the player controller is used to move the player
     playerController = new GameController();
@@ -45,8 +35,7 @@ function setup() {
 function draw() {
     //we have to redraw the background every frame
     background(0);
-    //drawing a grid
-    drawGrid();
+
     //this function is used to zoom out and follow
     //the player
     translation();
@@ -83,23 +72,6 @@ function draw() {
     player.show();
     player.update();
 
-    //adding some more food
-    if(random(1) < 0.03){
-        let x = random(-width * 5, width * 5);
-        let y = random(-height * 5, height * 5);
-        let f = new Food(x, y);
-        food.push(f);
-    }
-
-    //adding some more enemies
-    if(random(1) < 0.005){
-        let x = random(-width * 2, width * 2);
-        let y = random(-height * 2, height * 2);
-        let enemyController = new GameController(x, y);
-        let enemy = new Snake(enemyController, enemyController.pos.x, enemyController.pos.y);
-        enemies.push(enemy);
-    }
-
     //checking if player dies
     //checking if player kills enemies
     //adding new food food if an enemy dies
@@ -115,6 +87,9 @@ function draw() {
                 }
             }
             enemies.splice(i, 1);
+            let enemyController = new GameController(random(-width, width), random(-height, height));
+            let newEnemy = new Snake(enemyController, random(-width, width), random(-height, height));
+            enemies.push(newEnemy);
         }
     }
 
@@ -127,6 +102,8 @@ function draw() {
             playerController.thicken(food[i]); 
             player.addSegment();      
             food.splice(i, 1);
+            let newFood = new Food(random(-width, width), random(-height, height));
+            food.push(newFood);
         }
     }
 }
@@ -137,15 +114,6 @@ function translation(){
     zoom = lerp(zoom, newzoom, 0.1);
     scale(zoom);
     translate(-playerController.pos.x,-playerController.pos.y);
-}
-
-function drawGrid(){
-    for(let square of grid){
-        noFill();
-        stroke(80);
-        strokeWeight(1);
-        rect(square.pos.x, square.pos.y, square.w, square.w);
-    }
 }
 
 //when restaring we create new player 
